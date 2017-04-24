@@ -6,8 +6,6 @@
  * ***********************************************************************/
 #include "random.h"
 
-#include <stdio.h>
-
 /* Ensure ENTROPY is replenished first time around. */
 int random_index = MAX_ENTROPY_SIZE;
 
