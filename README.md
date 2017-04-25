@@ -5,15 +5,6 @@ orders of 1 to 9.
 
 https://arxiv.org/pdf/1302.1479.pdf
 
-# Goal
-
-Change the target number as follows:
-
-1. Edit `main.c`.
-1. Find the definition for `GOAL`.
-1. Change the value for `GOAL`.
-1. Save `main.c`.
-
 # Build
 
 Build the `main` program as follows:
@@ -26,16 +17,29 @@ Build the `main` program as follows:
 
 Run the program as follows:
 
-`./main`
-
-# Output
-
-When the program finds an expression whose value equals `GOAL`, it will write
-that expression to the console (standard output).
-
-# Terminate
+    ./main
 
 The program will not terminate until it finds a valid expression.
 
-Press `^C` to end the program at any time.
+Press `Control+C` to end the program at any time.
+
+## Goal
+
+The default target number is 10958, which can be changed on the command line:
+
+    ./main 10001
+
+## Digit Set
+
+The default sequential set of digits is {123456789}, which can be changed on
+the command line:
+
+    ./main 10001 12345678
+
+At least two digits must be supplied.
+
+# Output
+
+When an expression is found that evaluates to the goal, that expression is
+written to the console (standard output).
 
