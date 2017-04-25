@@ -14,12 +14,11 @@
 #include "random.h"
 #include "eval.h"
 
-/* 1 to write all expressions to standard error.
- * 0 to write only GOAL expression to standard output. */
-#define DEBUG 0
-
 /* Write the expression that equals this value to standard output. */
-#define GOAL 10958
+#define DEFAULT_GOAL 10958
+
+/* Set of digits used to generate equations, in order given. */
+#define DEFAULT_DIGITS "123456789"
 
 /* Number of operators (size of OPERATORS). */
 #define SIZEOF_OPERATORS 5
@@ -33,33 +32,27 @@ const char *OPERATORS[ SIZEOF_OPERATORS ] = {
   "/"
 };
 
-/* The number of digits constrains the total operations per expression. */
-#define MAX_OPERATIONS 8
-
-/* The minimum number of operations to use in a calculation. */
-#define MIN_OPERATIONS 2
-
 /* Final expression size (9 terminals, 9 operators, 18 spaces, and padding). */
 #define MAX_EXPR_LENGTH 64
 
 /**
  * Build a random postfix expression.
  */
-void generate_expression( char expr[ MAX_EXPR_LENGTH ] ) {
+void generate_expression( char expr[ MAX_EXPR_LENGTH ], const char *set ) {
   /* Contains a randomly split set of numbers. */
   char buffer[ MAX_EXPR_LENGTH * 2 ];
+
+  /* Total number of operations to perform (at least one). */
+  unsigned int operations = rnd() % (strlen( set ) - 1) + 1;
 
   /* Nuke the previous expression. */
   memset( expr, 0, MAX_EXPR_LENGTH );
 
-  /* Total number of operations to perform (at least one). */
-  unsigned int operations = rnd() % MAX_OPERATIONS + 1;
-
   /* Clear out the buffer before splitting digits into numbers. */
   memset( buffer, 0, MAX_EXPR_LENGTH * 2 );
 
-  /* Slice and dice the digits into numbers of random lengths. */
-  split( "123456789", buffer, operations );
+  /* Slice and dice the digits in the given set into random lengths. */
+  split( set, buffer, operations );
 
   /* Used to concatenate the individual numbers into the expression. */
   char *number = strtok( buffer, " " );
@@ -82,7 +75,7 @@ void generate_expression( char expr[ MAX_EXPR_LENGTH ] ) {
     /* If an operator isn't inserted, then retain the operations count for
      * another iteration. This ensures the numbers will mix in across
      * all possible positions, presuming a uniform random number generator. */
-    if( rnd() % 2 == 0 ) {
+    if( rnd() % 2 ) {
       /* Append a random operator. */
       strcat( expr, OPERATORS[ rnd() % SIZEOF_OPERATORS ] );
       strcat( expr, " " );
@@ -93,24 +86,24 @@ void generate_expression( char expr[ MAX_EXPR_LENGTH ] ) {
 }
 
 /**
- * 
+ * Generates expressions, evaluates them, and then terminates if the result
+ * is equal to the goal.
  */
 int main( int c, char **v ) {
   char expr[ MAX_EXPR_LENGTH ];
-  double result = 0;
+  double goal = c >= 2 ? atof( v[1] ) : DEFAULT_GOAL;
+  char *digits = c == 3 ? v[2] : DEFAULT_DIGITS;
+  double result = -1;
 
   srand( time( NULL ) );
 
-  while( 1 ) {
-    generate_expression( expr );
+  while( result != goal ) {
+    generate_expression( expr, digits );
     result = evaluate_expression( expr );
 
-    if( result == GOAL ) {
-      printf( "%s = %f\n", expr, result );
-      break;
-    }
-    else if( DEBUG ) {
-      fprintf( stderr, "%s = %f\n", expr, result );
+    /* Show the expression that generates the goal value. */
+    if( result == goal ) {
+      printf( "%s= %f\n", expr, result );
     }
   }
 

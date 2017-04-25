@@ -3,10 +3,16 @@
 double STACK[ STACK_SIZE ];
 int stack_top = -1;
 
+/**
+ * Pops an operand off the stack.
+ */
 double stack_pop() {
   return STACK[ stack_top-- ];
 }
  
+/**
+ * Pushes an operand onto the stack.
+ */
 void stack_push( double element ) {
   STACK[ ++stack_top ] = element;
 }
@@ -19,9 +25,11 @@ void stack_push( double element ) {
  * @param expr The expression to evaluate.
  */
 double evaluate_expression( const char *expr ) {
-  double operand1, operand2;
+  /* Expression will never exceed 64 characters. */
+  char eval[ 64 ];
 
-  char *eval = strdup( expr );
+  strcpy( eval, expr );
+  
   char *token = strtok( eval, " " );
 
   while( token != NULL ) {
@@ -31,8 +39,8 @@ double evaluate_expression( const char *expr ) {
       stack_push( atoi( token ) );
     }
     else {
-      operand2 = stack_pop();
-      operand1 = stack_pop();
+      double operand2 = stack_pop();
+      double operand1 = stack_pop();
 
       switch( ch ) {
         case '+': stack_push( operand1 + operand2 ); break;
@@ -45,8 +53,6 @@ double evaluate_expression( const char *expr ) {
 
     token = strtok( NULL, " " );
   }
-
-  free( eval );
 
   return stack_pop();
 }

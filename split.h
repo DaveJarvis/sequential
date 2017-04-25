@@ -12,7 +12,7 @@
  * @param buffer The memory location for the split results.
  * @param n The number of subsets to create.
  */
-void split( char *s, char *result, int n );
+void split( const char *s, char *result, int n );
 
 #endif
 

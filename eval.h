@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define STACK_SIZE 50
+#define STACK_SIZE 32
 
 /**
  * Pop a value off the stack.

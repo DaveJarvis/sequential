@@ -15,6 +15,9 @@
 /* Entropy buffer size. */
 #define MAX_ENTROPY_SIZE 255
 
+#define FALSE 0
+#define TRUE (!FALSE)
+
 /**
  * Compute a uniform random number.
  */
