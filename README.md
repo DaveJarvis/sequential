@@ -50,5 +50,5 @@ When an expression is found that evaluates to the goal, that expression is
 written to the console (standard output).
 
 When an expression is found within +/- 1 of the goal, that expression will
-be written to the console with `(CLOSE)` appended.
+be written to the console (standard error) with `(CLOSE)` appended.
 

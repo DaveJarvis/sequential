@@ -120,7 +120,7 @@ int main( int c, char **v ) {
     }
     else if( (result > goal && result < goal + 1) ||
              (result < goal && result > goal - 1)) {
-      printf( "%s= %f (CLOSE)\n", expr, result );
+      fprintf( stderr, "%s= %f (CLOSE)\n", expr, result );
     }
   }
 
