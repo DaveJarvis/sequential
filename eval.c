@@ -1,19 +1,19 @@
 #include "eval.h"
 
-double STACK[ STACK_SIZE ];
+mpfr_ptr STACK[ STACK_SIZE ];
 int stack_top = -1;
 
 /**
- * Pops an operand off the stack.
+ * Pops a value off the stack.
  */
-double stack_pop() {
+mpfr_ptr stack_pop() {
   return STACK[ stack_top-- ];
 }
  
 /**
- * Pushes an operand onto the stack.
+ * Pushes a value onto the stack.
  */
-void stack_push( double element ) {
+void stack_push( mpfr_ptr element ) {
   STACK[ ++stack_top ] = element;
 }
  
@@ -25,8 +25,9 @@ void stack_push( double element ) {
  * @param expr The expression to evaluate.
  */
 double evaluate_expression( const char *expr ) {
-  /* Expression will never exceed 64 characters. */
-  char eval[ 64 ];
+  /* Excessive digit set will SEGFAULT; 64 is fine for default set. */
+  char eval[ 256 ];
+  double result = -1;
 
   strcpy( eval, expr );
   
@@ -36,24 +37,43 @@ double evaluate_expression( const char *expr ) {
     char ch = *token;
 
     if( isdigit( ch ) ) {
-      stack_push( atoi( token ) );
+      mpfr_ptr number = (mpfr_ptr)malloc( sizeof( mpfr_t ) );
+      mpfr_init( number );
+
+      mpfr_set_d( number, atoi( token ), GMP_RNDN );
+      stack_push( number );
     }
     else {
-      double operand2 = stack_pop();
-      double operand1 = stack_pop();
+      mpfr_ptr operand2 = stack_pop();
+      mpfr_ptr operand1 = stack_pop();
+
+      mpfr_ptr number = (mpfr_ptr)malloc( sizeof( mpfr_t ) );
+      mpfr_init( number );
 
       switch( ch ) {
-        case '+': stack_push( operand1 + operand2 ); break;
-        case '-': stack_push( operand1 - operand2 ); break;
-        case '*': stack_push( operand1 * operand2 ); break;
-        case '/': stack_push( operand1 / operand2 ); break;
-        case '^': stack_push( pow( operand1, operand2 ) ); break;
+        case '+': mpfr_add( number, operand1, operand2, GMP_RNDN ); break;
+        case '-': mpfr_sub( number, operand1, operand2, GMP_RNDN ); break;
+        case '*': mpfr_mul( number, operand1, operand2, GMP_RNDN ); break;
+        case '/': mpfr_div( number, operand1, operand2, GMP_RNDN ); break;
+        case '^': mpfr_pow( number, operand1, operand2, GMP_RNDN ); break;
       }
+
+      stack_push( number );
+
+      mpfr_clear( operand2 );
+      mpfr_clear( operand1 );
+      free( operand2 );
+      free( operand1 );
     }
 
     token = strtok( NULL, " " );
   }
 
-  return stack_pop();
+  mpfr_ptr number = stack_pop();
+  result = mpfr_get_d( number, GMP_RNDN );
+  mpfr_clear( number );
+  free( number );
+
+  return result;
 }
 

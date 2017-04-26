@@ -5,6 +5,12 @@ orders of 1 to 9.
 
 https://arxiv.org/pdf/1302.1479.pdf
 
+# Dependencies
+
+The program uses [GNU MPFR](http://www.mpfr.org/) to evaluate expressions.
+
+    sudo apt-get install libmpfr-dev libmpfr-doc libmpfr4 libmpfr4-dbg
+
 # Build
 
 Build the `main` program as follows:
@@ -42,4 +48,7 @@ At least two digits must be supplied.
 
 When an expression is found that evaluates to the goal, that expression is
 written to the console (standard output).
+
+When an expression is found within +/- 1 of the goal, that expression will
+be written to the console with `(CLOSE)` appended.
 

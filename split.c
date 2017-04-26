@@ -12,7 +12,7 @@
  * be initialized to zero before calling this function.
  *
  * @param s The set of characters to split.
- * @param result The memory location for the split results (must be zero).
+ * @param result The memory location for the split results (must be zero'd).
  * @param n The number of subsets to create.
  */
 void split( const char *s, char *result, int n ) {

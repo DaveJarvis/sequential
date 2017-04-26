@@ -23,6 +23,9 @@
 /* Number of operators (size of OPERATORS). */
 #define SIZEOF_OPERATORS 5
 
+/* Number of bits to use when evaluating expressions. */
+#define DEFAULT_PRECISION 2048
+
 /* Non-terminals. */
 const char *OPERATORS[ SIZEOF_OPERATORS ] = {
   "+",
@@ -86,6 +89,16 @@ void generate_expression( char expr[ MAX_EXPR_LENGTH ], const char *set ) {
 }
 
 /**
+ * Called to seed the randomness and initialize any libraries.
+ */
+void init( void ) {
+  srand( time( NULL ) );
+
+  /* Set default precision for the calculations. */
+  mpfr_set_default_prec( (mpfr_prec_t)DEFAULT_PRECISION );
+}
+
+/**
  * Generates expressions, evaluates them, and then terminates if the result
  * is equal to the goal.
  */
@@ -95,7 +108,7 @@ int main( int c, char **v ) {
   char *digits = c == 3 ? v[2] : DEFAULT_DIGITS;
   double result = -1;
 
-  srand( time( NULL ) );
+  init();
 
   while( result != goal ) {
     generate_expression( expr, digits );
@@ -104,6 +117,10 @@ int main( int c, char **v ) {
     /* Show the expression that generates the goal value. */
     if( result == goal ) {
       printf( "%s= %f\n", expr, result );
+    }
+    else if( (result > goal && result < goal + 1) ||
+             (result < goal && result > goal - 1)) {
+      printf( "%s= %f (CLOSE)\n", expr, result );
     }
   }
 

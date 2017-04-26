@@ -7,19 +7,21 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <mpfr.h>
+
 #define STACK_SIZE 32
 
 /**
  * Pop a value off the stack.
  */
-double stack_pop();
+mpfr_ptr stack_pop();
 
 /**
  * Push a value onto the stack.
  *
  * @param element The value to push onto the stack.
  */
-void stack_push( double element );
+void stack_push( mpfr_ptr element );
 
 /**
  * Evalulate a Postfix Expression.
