@@ -24,7 +24,7 @@
 #define SIZEOF_OPERATORS 5
 
 /* Number of bits to use when evaluating expressions. */
-#define DEFAULT_PRECISION 2048
+#define DEFAULT_PRECISION 4096
 
 /* Non-terminals. */
 const char *OPERATORS[ SIZEOF_OPERATORS ] = {

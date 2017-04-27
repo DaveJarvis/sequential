@@ -1,6 +1,6 @@
 TARGET = main
 CC = gcc
-CCFLAGS = -ansi -Wall -Wshadow -std=gnu99 -O2
+CCFLAGS = -ansi -Wall -Wshadow -std=gnu99 -O3
 LFLAGS = -lm -lmpfr -lgmp
 
 .PHONY: default all clean
