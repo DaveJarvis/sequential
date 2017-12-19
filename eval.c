@@ -18,7 +18,7 @@ void stack_push( mpfr_ptr element ) {
 }
  
 /**
- * Evalulates a Postfix Expression, accepting +, -, *, /, and ^. Tokens
+ * Evaluates a Postfix Expression, accepting +, -, *, /, and ^. Tokens
  * must be separated by spaces. This will make a copy of the expression
  * prior to parsing so as to preserve the original expression.
  *
